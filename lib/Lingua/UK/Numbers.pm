@@ -150,13 +150,13 @@ Lingua::UK::Numbers - Converts numbers to money sum in words (in Ukrainian hryvn
 
 B<Lingua::UK::Numbers::uah_in_words()> helps you convert number to money sum in words.
 Given a number, B<uah_in_words()> returns it as money sum in ukrainian words, e.g.: 1.01 converted
-to I<odna hryvnya odna kopijka>, 2.22 converted to I<dws hryvni dwadcat' dws kopijki>.
+to I<odna hryvnya odna kopijka>, 2.22 converted to I<dwi hryvni dwadcyat' dwi kopijki>.
 
 =head1 FUNCTIONS
 
 =head2 uah_in_words( $NUMBER )
 
-returns sum in ukrainian words (UTF-8)
+returns sum in ukrainian (UTF-8)
 
 =head1 AUTHOR
 
