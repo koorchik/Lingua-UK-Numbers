@@ -6,7 +6,7 @@ use v5.10;
 use utf8;
 
 use Exporter;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(uah_in_words);
 
@@ -65,30 +65,32 @@ my %nom = (
     5  =>  {0 => "трильйон", 1 => "трильйонів", 2 => "один трильйон", 3 => "два трильйони"}
 );
 
-my $out_rub;
+my $out_hrn;
 
 sub uah_in_words
 {
-    my ($sum) = shift;
-    my ($retval, $i, $sum_rub, $sum_kop);
+    my $sum = shift;
+    return "нуль гривень нуль копійок" if $sum == 0;
+    
+    my ($retval, $i, $sum_hrn, $sum_kop);
 
     $retval = "";
-    $out_rub = ($sum >= 1) ? 0 : 1;
-    $sum_rub = sprintf("%0.0f", $sum);
-    $sum_rub-- if (($sum_rub - $sum) > 0);
-    $sum_kop = sprintf("%0.2f",($sum - $sum_rub))*100;
+    $out_hrn = ($sum >= 1) ? 0 : 1;
+    $sum_hrn = sprintf("%0.0f", $sum);
+    $sum_hrn-- if (($sum_hrn - $sum) > 0);
+    $sum_kop = sprintf("%0.2f",($sum - $sum_hrn))*100;
 
     my $kop = get_string($sum_kop, 0);
 
-    for ($i=1; $i<6 && $sum_rub >= 1; $i++) {
-        my $sum_tmp  = $sum_rub/1000;
+    for ($i=1; $i<6 && $sum_hrn >= 1; $i++) {
+        my $sum_tmp  = $sum_hrn/1000;
         my $sum_part = sprintf("%0.3f", $sum_tmp - int($sum_tmp))*1000;
-        $sum_rub = sprintf("%0.0f",$sum_tmp);
+        $sum_hrn = sprintf("%0.0f",$sum_tmp);
 
-        $sum_rub-- if ($sum_rub - $sum_tmp > 0);
+        $sum_hrn-- if ($sum_hrn - $sum_tmp > 0);
         $retval = get_string($sum_part, $i)." ".$retval;
     }
-    $retval .= " рублей" if ($out_rub == 0);
+    $retval .= " гривень" if ($out_hrn == 0);
     $retval .= " ".$kop;
     $retval =~ s/\s+/ /g;
     return $retval;
@@ -127,7 +129,7 @@ sub get_string
     }
     if ($nom >= 0) {
         $retval .= " ".$nom{$nominal}{$nom};
-        $out_rub = 1 if ($nominal == 1);
+        $out_hrn = 1 if ($nominal == 1);
     }
     $retval =~ s/^\s*//g;
     $retval =~ s/\s*$//g;

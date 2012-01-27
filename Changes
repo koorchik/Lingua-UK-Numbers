@@ -5,3 +5,7 @@ Revision history for Lingua-UK-Numbers
 
 0.02  
       Fixed typos
+
+0.03  
+      Fixed incorrect conversion of "0"
+      Fixed typos.      
