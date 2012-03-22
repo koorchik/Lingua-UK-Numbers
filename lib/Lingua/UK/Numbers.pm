@@ -6,8 +6,8 @@ use v5.10;
 use utf8;
 
 use Exporter;
-our $VERSION = '0.03';
-our @ISA = qw(Exporter);
+our $VERSION   = '0.03';
+our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uah_in_words);
 
 my %diw = (
@@ -67,74 +67,72 @@ my %nom = (
 
 my $out_hrn;
 
-sub uah_in_words
-{
-    my $sum = shift;
-    return "нуль гривень нуль копійок" if $sum == 0;
-    
-    my ($retval, $i, $sum_hrn, $sum_kop);
+sub uah_in_words {
+	my $sum = shift;
+	return "нуль гривень нуль копійок" if $sum == 0;
 
-    $retval = "";
-    $out_hrn = ($sum >= 1) ? 0 : 1;
-    $sum_hrn = sprintf("%0.0f", $sum);
-    $sum_hrn-- if (($sum_hrn - $sum) > 0);
-    $sum_kop = sprintf("%0.2f",($sum - $sum_hrn))*100;
+	my ( $retval, $i, $sum_hrn, $sum_kop );
 
-    my $kop = get_string($sum_kop, 0);
+	$retval  = "";
+	$out_hrn = ( $sum >= 1 ) ? 0 : 1;
+	$sum_hrn = sprintf( "%0.0f", $sum );
+	$sum_hrn-- if ( ( $sum_hrn - $sum ) > 0 );
+	$sum_kop = sprintf( "%0.2f", ( $sum - $sum_hrn ) ) * 100;
 
-    for ($i=1; $i<6 && $sum_hrn >= 1; $i++) {
-        my $sum_tmp  = $sum_hrn/1000;
-        my $sum_part = sprintf("%0.3f", $sum_tmp - int($sum_tmp))*1000;
-        $sum_hrn = sprintf("%0.0f",$sum_tmp);
+	my $kop = get_string( $sum_kop, 0 );
 
-        $sum_hrn-- if ($sum_hrn - $sum_tmp > 0);
-        $retval = get_string($sum_part, $i)." ".$retval;
-    }
-    $retval .= " гривень" if ($out_hrn == 0);
-    $retval .= " ".$kop;
-    $retval =~ s/\s+/ /g;
-    return $retval;
+	for ( $i = 1 ; $i < 6 && $sum_hrn >= 1 ; $i++ ) {
+		my $sum_tmp = $sum_hrn / 1000;
+		my $sum_part = sprintf( "%0.3f", $sum_tmp - int($sum_tmp) ) * 1000;
+		$sum_hrn = sprintf( "%0.0f", $sum_tmp );
+
+		$sum_hrn-- if ( $sum_hrn - $sum_tmp > 0 );
+		$retval = get_string( $sum_part, $i ) . " " . $retval;
+	}
+	$retval .= " гривень" if ( $out_hrn == 0 );
+	$retval .= " " . $kop;
+	$retval =~ s/\s+/ /g;
+	return $retval;
 }
 
-sub get_string
-{
-    my ($sum, $nominal) = @_;
-    my ($retval, $nom) = ('', -1);
+sub get_string {
+	my ( $sum, $nominal ) = @_;
+	my ( $retval, $nom ) = ( '', -1 );
 
-    if (($nominal == 0 && $sum < 100) || ($nominal > 0 && $nominal < 6 && $sum < 1000)) {
-        my $s2 = int($sum/100);
-        if ($s2 > 0) {
-            $retval .= " ".$diw{2}{$s2}{0};
-            $nom = $diw{2}{$s2}{1};
-        }
-        my $sx = sprintf("%0.0f", $sum - $s2*100);
-        $sx-- if ($sx - ($sum - $s2*100) > 0);
+	if ( ( $nominal == 0 && $sum < 100 ) || ( $nominal > 0 && $nominal < 6 && $sum < 1000 ) ) {
+		my $s2 = int( $sum / 100 );
+		if ( $s2 > 0 ) {
+			$retval .= " " . $diw{2}{$s2}{0};
+			$nom = $diw{2}{$s2}{1};
+		}
+		my $sx = sprintf( "%0.0f", $sum - $s2 * 100 );
+		$sx-- if ( $sx - ( $sum - $s2 * 100 ) > 0 );
 
-        if (($sx<20 && $sx>0) || ($sx == 0 && $nominal == 0)) {
-            $retval .= " ".$diw{0}{$sx}{0};
-            $nom = $diw{0}{$sx}{1};
-        } else {
-            my $s1 = sprintf("%0.0f",$sx/10);
-            $s1-- if (($s1 - $sx/10) > 0);
-            my $s0 = int($sum - $s2*100 - $s1*10 + 0.5);
-            if ($s1 > 0) {
-                $retval .= " ".$diw{1}{$s1}{0};
-                $nom = $diw{1}{$s1}{1};
-            }
-            if ($s0 > 0) {
-                $retval .= " ".$diw{0}{$s0}{0};
-                $nom = $diw{0}{$s0}{1};
-            }
-        }
-    }
-    if ($nom >= 0) {
-        $retval .= " ".$nom{$nominal}{$nom};
-        $out_hrn = 1 if ($nominal == 1);
-    }
-    $retval =~ s/^\s*//g;
-    $retval =~ s/\s*$//g;
+		if ( ( $sx < 20 && $sx > 0 ) || ( $sx == 0 && $nominal == 0 ) ) {
+			$retval .= " " . $diw{0}{$sx}{0};
+			$nom = $diw{0}{$sx}{1};
+		} else {
+			my $s1 = sprintf( "%0.0f", $sx / 10 );
+			$s1-- if ( ( $s1 - $sx / 10 ) > 0 );
+			my $s0 = int( $sum - $s2 * 100 - $s1 * 10 + 0.5 );
+			if ( $s1 > 0 ) {
+				$retval .= " " . $diw{1}{$s1}{0};
+				$nom = $diw{1}{$s1}{1};
+			}
+			if ( $s0 > 0 ) {
+				$retval .= " " . $diw{0}{$s0}{0};
+				$nom = $diw{0}{$s0}{1};
+			}
+		}
+	}
+	if ( $nom >= 0 ) {
+		$retval .= " " . $nom{$nominal}{$nom};
+		$out_hrn = 1 if ( $nominal == 1 );
+	}
+	$retval =~ s/^\s*//g;
+	$retval =~ s/\s*$//g;
 
-    return $retval;
+	return $retval;
 }
 
 =head1 NAME
@@ -215,4 +213,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of Lingua::UK::Numbers
+1;    # End of Lingua::UK::Numbers
