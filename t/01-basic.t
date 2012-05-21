@@ -16,7 +16,7 @@ my %data = (
 
 foreach my $num ( sort { $a <=> $b } keys %data ) {
     my $words = $data{$num};
-    is( uah_in_words($num), $words, $num );
+    is( uah_in_words($num), $words, "Number $num" );
 }
 
 done_testing();

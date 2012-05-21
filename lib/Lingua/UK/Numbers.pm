@@ -6,7 +6,7 @@ use v5.10;
 use utf8;
 
 use Exporter;
-our $VERSION   = '0.03';
+our $VERSION   = '0.04';
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uah_in_words);
 
@@ -160,56 +160,15 @@ returns sum in ukrainian (UTF-8)
 
 =head1 AUTHOR
 
-"koorchik", C<< <"koorchik at cpan.org"> >>
+Viktor Turskyi <koorchik@cpan.org>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-lingua-uk-numbers at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Lingua-UK-Numbers>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to Github L<https://github.com/koorchik/Lingua-UK-Numbers>
 
-=head1 SUPPORT
+=head1 SEE ALSO
 
-You can find documentation for this module with the perldoc command.
-
-    perldoc Lingua::UK::Numbers
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Lingua-UK-Numbers>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Lingua-UK-Numbers>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Lingua-UK-Numbers>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Lingua-UK-Numbers/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2012 "koorchik".
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
+L<Lingua-RU-Number>
 
 =cut
 

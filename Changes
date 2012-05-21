@@ -9,3 +9,7 @@ Revision history for Lingua-UK-Numbers
 0.03  
       Fixed incorrect conversion of "0"
       Fixed typos.      
+
+0.04
+      Added tests
+      Updated POD
