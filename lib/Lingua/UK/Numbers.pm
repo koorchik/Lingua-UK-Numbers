@@ -6,9 +6,11 @@ use v5.10;
 use utf8;
 
 use Exporter;
-our $VERSION   = '0.04';
+our $VERSION   = '0.05';
 our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(uah_in_words);
+our @EXPORT_OK = qw(uah_in_words number_in_words);
+
+use Carp;
 
 my %diw = (
     0 => {
@@ -57,11 +59,11 @@ my %diw = (
 );
 
 my %nom = (
-    0  =>  {0 => "копійки",  1 => "копійок",    2 => "одна копійка", 3 => "дві копійки"},
-    1  =>  {0 => "гривні",   1 => "гривень",    2 => "одна гривня",  3 => "дві гривні"},
-    2  =>  {0 => "тисячі",   1 => "тисяч",      2 => "одна тисяча",  3 => "дві тисячі"},
-    3  =>  {0 => "мільйона", 1 => "мільйонів",  2 => "один мільйон", 3 => "два мільйони"},
-    4  =>  {0 => "мільярди", 1 => "мільярдів",  2 => "один мільярд", 3 => "два мільярди"},
+    0  =>  {0 => "копійки",  1 => "копійок",    2 => "одна копійка",  3 => "дві копійки"},
+    1  =>  {0 => "гривні",   1 => "гривень",    2 => "одна гривня",   3 => "дві гривні"},
+    2  =>  {0 => "тисячі",   1 => "тисяч",      2 => "одна тисяча",   3 => "дві тисячі"},
+    3  =>  {0 => "мільйона", 1 => "мільйонів",  2 => "один мільйон",  3 => "два мільйони"},
+    4  =>  {0 => "мільярди", 1 => "мільярдів",  2 => "один мільярд",  3 => "два мільярди"},
     5  =>  {0 => "трильйон", 1 => "трильйонів", 2 => "один трильйон", 3 => "два трильйони"}
 );
 
@@ -93,6 +95,41 @@ sub uah_in_words {
 	$retval .= " " . $kop;
 	$retval =~ s/\s+/ /g;
 	return $retval;
+}
+
+sub number_in_words {
+	my ( $sum, $gender ) = @_;
+	croak 'gender should be "FEMININE" or "MASCULINE"' unless $gender ~~ ['FEMININE', 'MASCULINE'];
+	
+	return "нуль" if $sum == 0;
+
+	local $nom{1} = {
+		0 => "",
+		1 => "",
+		2 => $gender eq 'FEMININE' ? 'одна': 'один', 
+		3 => $gender eq 'FEMININE' ? 'дві': 'два'
+	};
+
+	my ( $retval, $i, $sum_words );
+
+	$retval  = "";
+
+	$sum_words = sprintf( "%0.0f", $sum );
+	$sum_words-- if ( ( $sum_words - $sum ) > 0 );
+
+	for ( $i = 1 ; $i < 6 && $sum_words >= 1 ; $i++ ) {
+		my $sum_tmp = $sum_words / 1000;
+		my $sum_part = sprintf( "%0.3f", $sum_tmp - int($sum_tmp) ) * 1000;
+		$sum_words = sprintf( "%0.0f", $sum_tmp );
+
+		$sum_words-- if ( $sum_words - $sum_tmp > 0 );
+		$retval = get_string( $sum_part, $i ) . " " . $retval;
+	}
+
+	$retval =~ s/\s+/ /g;
+	$retval =~ s/\s+$//g;
+	
+	return $retval;;
 }
 
 sub get_string {
@@ -141,22 +178,30 @@ Lingua::UK::Numbers - Converts numbers to money sum in words (in Ukrainian hryvn
 
 =head1 SYNOPSIS
 
-  use Lingua::UK::Numbers qw(uah_in_words);
+  use Lingua::UK::Numbers qw(number_in_words, uah_in_words);
+
+  print number_in_words(100);
 
   print uah_in_words(1.01), "\n";
 
 
 =head1 DESCRIPTION
 
-B<Lingua::UK::Numbers::uah_in_words()> helps you convert number to money sum in words.
-Given a number, B<uah_in_words()> returns it as money sum in ukrainian words, e.g.: 1.01 converted
-to I<odna hryvnya odna kopijka>, 2.22 converted to I<dwi hryvni dwadcyat' dwi kopijki>.
+B<Lingua::UK::Numbers> helps you convert number to amount in words.
 
 =head1 FUNCTIONS
 
+=head2 number_in_words( $NUMBER, $GENDER )
+
+returns number in words in ukrainian (UTF-8)
+
+$GENDER can be 'MASCULINE' or 'FEMININE'
+
 =head2 uah_in_words( $NUMBER )
 
-returns sum in ukrainian (UTF-8)
+returns money sum in ukrainian words(UTF-8)
+
+e.g.: 1.01 converted to I<odna hryvnya odna kopijka>, 2.22 converted to I<dwi hryvni dwadcyat' dwi kopijki>.
 
 =head1 AUTHOR
 
