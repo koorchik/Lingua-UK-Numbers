@@ -6,7 +6,7 @@ use v5.10;
 use utf8;
 
 use Exporter;
-our $VERSION   = '0.05';
+our $VERSION   = '0.06';
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uah_in_words number_in_words);
 
@@ -178,16 +178,16 @@ Lingua::UK::Numbers - Converts numbers to money sum in words (in Ukrainian hryvn
 
 =head1 SYNOPSIS
 
-  use Lingua::UK::Numbers qw(number_in_words, uah_in_words);
+  use Lingua::UK::Numbers qw(number_in_words uah_in_words);
 
   print number_in_words(100);
 
-  print uah_in_words(1.01), "\n";
+  print uah_in_words(1.01);
 
 
 =head1 DESCRIPTION
 
-B<Lingua::UK::Numbers> helps you convert number to amount in words.
+B<Lingua::UK::Numbers> helps you to convert number to words.
 
 =head1 FUNCTIONS
 
