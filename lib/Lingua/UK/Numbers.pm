@@ -6,7 +6,7 @@ use v5.10;
 use utf8;
 
 use Exporter;
-our $VERSION   = '0.06';
+our $VERSION   = '0.07';
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uah_in_words number_in_words);
 
@@ -99,14 +99,14 @@ sub uah_in_words {
 
 sub number_in_words {
 	my ( $sum, $gender ) = @_;
-	croak 'gender should be "FEMININE" or "MASCULINE"' unless $gender ~~ ['FEMININE', 'MASCULINE'];
-	
+	croak 'gender should be "FEMININE" or "MASCULINE"' if $gender ne 'FEMININE' && $gender ne 'MASCULINE';
+
 	return "нуль" if $sum == 0;
 
 	local $nom{1} = {
 		0 => "",
 		1 => "",
-		2 => $gender eq 'FEMININE' ? 'одна': 'один', 
+		2 => $gender eq 'FEMININE' ? 'одна': 'один',
 		3 => $gender eq 'FEMININE' ? 'дві': 'два'
 	};
 
@@ -128,7 +128,7 @@ sub number_in_words {
 
 	$retval =~ s/\s+/ /g;
 	$retval =~ s/\s+$//g;
-	
+
 	return $retval;;
 }
 
